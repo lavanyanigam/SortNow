@@ -26,14 +26,14 @@ SortNow helps identify and classify different types of waste in real-time using 
 Built a simplified 5 layer CNN backbone inspired by YOLO:
 - 4 MaxPooling stages reducing 448×448 to 14×14 grid
 - 512 channels in final conv layers
-- Grid size: 14×14 (S=14)
-- 2 bounding boxes per cell (B=2)
+- Grid size: 14×14 
+- 2 bounding boxes per cell 
 - Output: 14×14×16 predictions
 
 ## Training Details
 
 - **Framework:** PyTorch
-- **Optimizer:** Adam with weight decay (1e-4)
+- **Optimizer:** Adam 
 - **Learning rate:** 1e-4 
 - **Batch size:** 16
 - **Epochs:** 100 
@@ -43,7 +43,10 @@ Trained without augmentations
 
 ## Results
 
-
+Early stopping triggered at epoch 64
+Best model at epoch 54 with validation loss: 176.3113
+Final training loss: 65.5796
+Final validation loss: 177.0820
 
 
 ## Development History

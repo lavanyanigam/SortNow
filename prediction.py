@@ -6,7 +6,7 @@ from torchvision import transforms as T
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-# Must match your training class order
+
 CLASS_NAMES = {
     0: 'BIODEGRADABLE',
     1: 'CARDBOARD',
@@ -21,7 +21,7 @@ COLORS = [
     (255, 0, 0), (255, 0, 255), (0, 255, 255)
 ]
 
-# ============ MODEL ARCHITECTURE ============
+
 architecture_config = [ 
     (7, 64, 2, 3),      
     "M",                
@@ -91,7 +91,7 @@ class Yolov1(nn.Module):
             nn.Linear(2048, S*S*(C+B*5)),
         )
 
-# ============ PREDICTION FUNCTIONS ============
+
 
 def cellboxes_to_boxes(predictions, S=14):
     """
@@ -102,7 +102,7 @@ def cellboxes_to_boxes(predictions, S=14):
     batch_size = predictions.shape[0]
     predictions = predictions.reshape(batch_size, S, S, -1)
     
-    # Box predictions (indices match your training)
+    # Box predictions 
     bboxes1 = predictions[..., 7:11]   # First box: [x, y, w, h]
     bboxes2 = predictions[..., 12:16]  # Second box: [x, y, w, h]
     
@@ -110,22 +110,21 @@ def cellboxes_to_boxes(predictions, S=14):
     scores1 = predictions[..., 6:7]    # First box confidence
     scores2 = predictions[..., 11:12]  # Second box confidence
     
-    # Choose box with higher confidence
+    # Choosing box with higher confidence
     scores = torch.cat((scores1, scores2), dim=-1)
     best_box = scores.argmax(-1).unsqueeze(-1).float()  # [batch, S, S, 1]
     
-    # Select best box coordinates
+    # best box coordinates
     best_boxes = bboxes1 * (1 - best_box) + best_box * bboxes2
     
-    # Convert from cell-relative to image-relative coordinates
+  
     cell_indices_x = torch.arange(S, device=predictions.device).repeat(batch_size, S, 1).unsqueeze(-1)
     cell_indices_y = torch.arange(S, device=predictions.device).repeat(batch_size, S, 1).unsqueeze(-1).permute(0, 2, 1, 3)
     
-    # x, y are relative to cell; convert to absolute image coordinates
+    
     x = (best_boxes[..., 0:1] + cell_indices_x) / S
     y = (best_boxes[..., 1:2] + cell_indices_y) / S
     
-    # w, h need to be divided by S
     w = best_boxes[..., 2:3] / S
     h = best_boxes[..., 3:4] / S
     
@@ -212,7 +211,7 @@ def draw_boxes(image, boxes, class_names, colors):
         x2 = int((x_center + width / 2) * w)
         y2 = int((y_center + height / 2) * h)
         
-        # Clamp to image boundaries
+        
         x1, y1 = max(0, x1), max(0, y1)
         x2, y2 = min(w, x2), min(h, y2)
         
@@ -282,22 +281,22 @@ def predict_image(model, image_path, confidence_threshold=0.3, iou_threshold=0.5
 def main():
     print(f"[INFO] Using device: {DEVICE}")
     
-    # Load trained model (S=14, B=2, C=6)
+    
     model = Yolov1(split_size=14, num_boxes=2, num_classes=6).to(DEVICE)
     
-    # Load checkpoint
+    #
     checkpoint_path = "/Users/lavanyanigam/Desktop/SortNow/best_model.pth"  
     
     try:
         checkpoint = torch.load(checkpoint_path, map_location=DEVICE)
         
-        # Check if checkpoint contains 'state_dict' key
+        
         if isinstance(checkpoint, dict) and 'state_dict' in checkpoint:
             model.load_state_dict(checkpoint['state_dict'])
             print(f"[INFO] Loaded model from epoch {checkpoint.get('epoch', 'unknown')}")
             print(f"[INFO] Validation loss: {checkpoint.get('val_loss', 'unknown'):.4f}")
         else:
-            # Direct state_dict
+            
             model.load_state_dict(checkpoint)
             print("[INFO] Loaded model state dict")
     except Exception as e:

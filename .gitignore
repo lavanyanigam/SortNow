@@ -49,3 +49,12 @@ htmlcov/
 *.bak
 *.backup
 .cache/
+results/ 
+testimages/
+# Model files
+*.pth
+*.pt
+*.pkl
+*.h5
+*.png
+*.jpg

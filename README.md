@@ -43,12 +43,12 @@ Trained without augmentations
 
 ## Results
 
--Early stopping triggered at epoch 64
--Best model at epoch 54 with validation loss: 176.3113
--Final training loss: 65.5796
--Final validation loss: 177.0820
+- Early stopping triggered at epoch 64
+- Best model at epoch 54 with validation loss: 176.3113
+- Final training loss: 65.5796
+- Final validation loss: 177.0820
 
--![Training History](yolo_training_plot.png)
+- ![Training History](yolo_training_plot.png)
 
 
 

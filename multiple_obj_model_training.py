@@ -155,7 +155,7 @@ class CustomTensorDataset(Dataset):
                 if class_label >= self.C:
                     print(f"warning: class {class_label} >= {self.C} in {label_path}")
                     continue
-                # Store bounding box (without class) and class separately
+                # Store bounding box and class separately
                 boxes.append([x_center, y_center, width, height])
                 class_labels.append(class_label)
     
@@ -168,36 +168,36 @@ class CustomTensorDataset(Dataset):
         image = cv2.resize(image, (448, 448))
         image = T.ToTensor()(image)
     
-        # Target format: [C classes, confidence, x, y, w, h, (unused B=2 slots)]
+        # Target format: [C classes, confidence, x, y, w, h for B=1, x y w h for B=2]
         label_matrix = torch.zeros((self.S, self.S, self.C + 5*self.B))
         
-        # Reconstruct boxes with their class labels
+        # reconstruct boxes with their class labels using zip (without for loop)
         for box, class_label in zip(boxes, class_labels):
-            if len(box) != 4:  # Skip invalid boxes
+            if len(box) != 4:  
                 continue
                 
             x_center, y_center, width, height = box
             class_label = int(class_label)
             
-            # Find grid cell
+            # Find grid cell in image grid
             i = int(self.S * y_center)  
             j = int(self.S * x_center)  
-            i = max(0, min(i, self.S - 1))  # Clamp to valid range
+            i = max(0, min(i, self.S - 1))  
             j = max(0, min(j, self.S - 1))
     
-            # Only store ONE box per cell (first one encountered)
+            # Only store 1 box per cell (first one encountered)
             if label_matrix[i, j, 6] == 0:
-                # Calculate cell-relative coordinates
+                # cell-relative coordinates
                 x_cell = self.S * x_center - j  
                 y_cell = self.S * y_center - i  
                 width_cell = width * self.S
                 height_cell = height * self.S
     
-                # Store in first box slot only
-                label_matrix[i, j, class_label] = 1  # One-hot class
-                label_matrix[i, j, 6] = 1  # Confidence (objectness)
+                # Store label data- in first box slot only(only 1 correct bbox)
+                label_matrix[i, j, class_label] = 1 
+                label_matrix[i, j, 6] = 1  # Confidence 
                 label_matrix[i, j, 7:11] = torch.tensor([x_cell, y_cell, width_cell, height_cell])
-                # Indices 11:16 remain zeros (unused for ground truth)
+                
         
         return image, label_matrix
 architecture_config = [ 

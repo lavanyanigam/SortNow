@@ -102,15 +102,15 @@ def cellboxes_to_boxes(predictions, S=14):
     batch_size = predictions.shape[0]
     predictions = predictions.reshape(batch_size, S, S, -1)
     
-    # Box predictions 
-    bboxes1 = predictions[..., 7:11]   # First box: [x, y, w, h]
-    bboxes2 = predictions[..., 12:16]  # Second box: [x, y, w, h]
+    # box predictions 
+    bboxes1 = predictions[..., 7:11]   # first box
+    bboxes2 = predictions[..., 12:16]  # second box
     
-    # Confidence scores
-    scores1 = predictions[..., 6:7]    # First box confidence
-    scores2 = predictions[..., 11:12]  # Second box confidence
+    # confidence scores
+    scores1 = predictions[..., 6:7]    # First box 
+    scores2 = predictions[..., 11:12]  # Second box 
     
-    # Choosing box with higher confidence
+    #  box with higher confidence
     scores = torch.cat((scores1, scores2), dim=-1)
     best_box = scores.argmax(-1).unsqueeze(-1).float()  # [batch, S, S, 1]
     
@@ -130,7 +130,7 @@ def cellboxes_to_boxes(predictions, S=14):
     
     converted_bboxes = torch.cat((x, y, w, h), dim=-1)
     
-    # Get predicted class and confidence
+    #  predicted class and confidence
     predicted_class = predictions[..., :6].argmax(-1).unsqueeze(-1).float()
     best_confidence = torch.max(scores1, scores2)
     
@@ -144,7 +144,7 @@ def calculate_iou(box1, box2):
     """
     Calculate IoU between two boxes in midpoint format [x, y, w, h]
     """
-    # Convert to corners
+   
     box1_x1 = box1[0] - box1[2] / 2
     box1_y1 = box1[1] - box1[3] / 2
     box1_x2 = box1[0] + box1[2] / 2
@@ -155,7 +155,7 @@ def calculate_iou(box1, box2):
     box2_x2 = box2[0] + box2[2] / 2
     box2_y2 = box2[1] + box2[3] / 2
     
-    # Intersection
+   
     x1 = max(box1_x1, box2_x1)
     y1 = max(box1_y1, box2_y1)
     x2 = min(box1_x2, box2_x2)
@@ -163,7 +163,7 @@ def calculate_iou(box1, box2):
     
     intersection = max(0, x2 - x1) * max(0, y2 - y1)
     
-    # Union
+   
     box1_area = (box1_x2 - box1_x1) * (box1_y2 - box1_y1)
     box2_area = (box2_x2 - box2_x1) * (box2_y2 - box2_y1)
     union = box1_area + box2_area - intersection + 1e-6
@@ -175,7 +175,7 @@ def non_max_suppression(bboxes, iou_threshold=0.5, confidence_threshold=0.4):
     Apply NMS to remove overlapping boxes
     bboxes: list of [class, confidence, x, y, w, h]
     """
-    # Filter by confidence
+    # filter by confidence
     bboxes = [box for box in bboxes if box[1] > confidence_threshold]
     bboxes = sorted(bboxes, key=lambda x: x[1], reverse=True)
     bboxes_after_nms = []
@@ -183,10 +183,10 @@ def non_max_suppression(bboxes, iou_threshold=0.5, confidence_threshold=0.4):
     while bboxes:
         chosen_box = bboxes.pop(0)
         
-        # Keep boxes with different class OR low IoU overlap
+        # keep boxes with different class or low iou 
         bboxes = [
             box for box in bboxes
-            if box[0] != chosen_box[0]  # Different class
+            if box[0] != chosen_box[0]  
             or calculate_iou(chosen_box[2:], box[2:]) < iou_threshold
         ]
         
@@ -205,7 +205,7 @@ def draw_boxes(image, boxes, class_names, colors):
         confidence = box[1]
         x_center, y_center, width, height = box[2:]
         
-        # Convert from normalized to pixel coordinates
+        
         x1 = int((x_center - width / 2) * w)
         y1 = int((y_center - height / 2) * h)
         x2 = int((x_center + width / 2) * w)
@@ -215,11 +215,11 @@ def draw_boxes(image, boxes, class_names, colors):
         x1, y1 = max(0, x1), max(0, y1)
         x2, y2 = min(w, x2), min(h, y2)
         
-        # Draw rectangle
+        
         color = colors[class_id % len(colors)]
         cv2.rectangle(image, (x1, y1), (x2, y2), color, 2)
         
-        # Draw label with background
+        # draw label with background
         label = f"{class_names[class_id]}: {confidence:.2f}"
         (text_width, text_height), _ = cv2.getTextSize(
             label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1
@@ -239,7 +239,7 @@ def predict_image(model, image_path, confidence_threshold=0.3, iou_threshold=0.5
     """
     Run inference on a single image
     """
-    # Load and preprocess image
+    
     image = cv2.imread(image_path)
     if image is None:
         raise ValueError(f"Could not load image from {image_path}")
@@ -247,31 +247,30 @@ def predict_image(model, image_path, confidence_threshold=0.3, iou_threshold=0.5
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     original_image = image.copy()
     
-    # Resize to 448x448 (same as training)
     image_resized = cv2.resize(image, (448, 448))
     image_tensor = T.ToTensor()(image_resized).unsqueeze(0).to(DEVICE)
     
-    # Get predictions
+    
     model.eval()
     with torch.no_grad():
         predictions = model(image_tensor)
     
-    # Convert to boxes with S=14
+    # convert to boxes with S=14
     boxes = cellboxes_to_boxes(predictions, S=S)
-    boxes = boxes[0].cpu().numpy()  # First image in batch
+    boxes = boxes[0].cpu().numpy()  # first image in batch
     
-    # Convert to list format for NMS
+    # convert to list format for nms
     boxes_list = []
     for i in range(S):
         for j in range(S):
             box = boxes[i, j]
-            if box[1] > confidence_threshold:  # Check confidence
+            if box[1] > confidence_threshold:  
                 boxes_list.append(box.tolist())
     
-    # Apply NMS
+    # apply nms
     boxes_nms = non_max_suppression(boxes_list, iou_threshold, confidence_threshold)
     
-    # Draw boxes
+    
     result_image = draw_boxes(original_image, boxes_nms, CLASS_NAMES, COLORS)
     
     return result_image, boxes_nms
@@ -284,7 +283,7 @@ def main():
     
     model = Yolov1(split_size=14, num_boxes=2, num_classes=6).to(DEVICE)
     
-    #
+    
     checkpoint_path = "/Users/lavanyanigam/Desktop/SortNow/best_model.pth"  
     
     try:
@@ -316,7 +315,7 @@ def main():
             S=14  
         )
         
-        # Display results
+        
         print(f"\n{'='*50}")
         print(f"Detected {len(boxes)} objects:")
         print(f"{'='*50}")
@@ -327,7 +326,7 @@ def main():
             print(f"{i}. {CLASS_NAMES[class_id]}: {confidence:.2%} | Box: ({x:.3f}, {y:.3f}, {w:.3f}, {h:.3f})")
         print(f"{'='*50}\n")
         
-        # Save result
+        
         result_image_bgr = cv2.cvtColor(result_image, cv2.COLOR_RGB2BGR)
         output_path = "/Users/lavanyanigam/Desktop/SortNow/results/predictionresult0.jpg"
         cv2.imwrite(output_path, result_image_bgr)

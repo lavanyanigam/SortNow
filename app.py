@@ -126,7 +126,7 @@ def draw_boxes(img, boxes):
         cv2.putText(img_array, label, (x1, y1-5), 
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
 
-        return Image.fromarray(img_array)
+    return Image.fromarray(img_array)
 
 
 # Load model

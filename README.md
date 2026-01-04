@@ -1,45 +1,89 @@
-# SortNow - Your Smart Waste Classification Assistant
+# SortNow: AI-Powered Waste Classification System
 
-A custom YOLO based object detection model to classify waste into 6 categories for better garbage segregation and environmental impact.
+YOLO-based waste detection system classifying 6 categories: Biodegradable, Cardboard, Glass, Metal, Paper, and Plastic.
 
-## About The Project
+## Overview
 
-SortNow helps identify and classify different types of waste in real-time using a custom-built YOLO architecture. The goal is to make waste sorting easier and more accurate, ultimately reducing contamination in recycling streams.
+Custom YOLOv1 architecture with 14×14 grid detection for real-time waste classification through web interface.
 
-## Classes Detected:
-- Biodegradable waste
-- Cardboard
-- Glass
-- Metal
-- Paper  
-- Plastic
-
-## Dataset
-
-- **Training images:** 7,260
-- **Validation images:** 3,114
-- **Format:** YOLO format (normalized bounding boxes)
-- **Image size:** 448×448
+### Key Features
+- Custom YOLO with 14×14 grid, 2 boxes per cell, 6 classes
+- Flask web application with interactive UI
+- Trained on 7,260 images, validated on 3,114 images
 
 ## Model Architecture
 
-Built a simplified 5 layer CNN backbone inspired by YOLO:
-- 4 MaxPooling stages reducing 448×448 to 14×14 grid
-- 512 channels in final conv layers
-- Grid size: 14×14 
-- 2 bounding boxes per cell 
-- Output: 14×14×16 predictions
+![Architecture](model_arch.png)
+
+- **Type**: Custom YOLOv1
+- **Input Size**: 448×448 pixels
+- **Grid Size**: 14×14 (S=14)
+- **Bounding Boxes per Cell**: 2 (B=2)
+- **Classes**: 6 waste categories
+- **Output**: Class predictions + bounding box coordinates
+
+
+## Dataset
+
+**Original:** [Roboflow Garbage Classification](https://universe.roboflow.com/material-identification/garbage-classification-3)  
+**Preprocessed:** [Custom Kaggle Dataset](https://www.kaggle.com/datasets/lavanyanigam/garbageclassificationfinal)
+
+### Preprocessing
+1. Analyzed dataset with `preprocessing/analyze.py`
+2. Filtered images with >98 objects using `preprocessing/max_obj_filter.py`
+4. Final: 7,260 images across 6 classes
+
+````markdown
+## Installation
+
+1. **Clone the Repository**
+```bash
+git clone https://github.com/lavanyanigam/SortNow.git
+cd SortNow
+````
+
+2. **Install Dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+## Download Trained Model
+
+**Google Drive**: [Download best_model.pth](https://drive.google.com/drive/folders/1ivYL-NOWnobMNxCAc_xLHM5FVsEsOz0q?usp=sharing)
+* Place it in the project root (same folder as `app.py`)
+
+```text
+SortNow/
+├── app.py
+├── best_model.pth
+├── requirements.txt
+├── templates/
+└── static/
+```
+
+## Usage
+
+1. **Run the Application**
+```bash
+python app.py
+```
+2. **Open in Browser**
+```
+http://localhost:5001
+```
+3. **Classify Waste:**
+-Upload an image
+-Click Classify & View detection results and bin recommendations
 
 ## Training Details
 
+-**Notebook:** [Training Code](https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)
 - **Framework:** PyTorch
 - **Optimizer:** Adam 
 - **Learning rate:** 1e-4 
 - **Batch size:** 16
-- **Epochs:** 100 
+- **Epochs:** 100 (Early stopping at Epoch 64)
 - **Hardware:** Kaggle GPU P100
-
-Trained without augmentations
 
 ## Results
 
@@ -50,14 +94,15 @@ Trained without augmentations
 
 - ![Training History](yolo_training_plot.png)
 
+## Reproduce Training
 
+- **Fork notebook:** [KAGGLE NOTEBOOK LINK](https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)
+- **Use dataset:** [Custom Kaggle Dataset](https://www.kaggle.com/datasets/lavanyanigam/garbageclassificationfinal)
+- Train on Kaggle GPU
+- [Download best_model.pth](https://drive.google.com/drive/folders/1ivYL-NOWnobMNxCAc_xLHM5FVsEsOz0q?usp=sharing)
 
-## Development History
+##**Development History**
 
-### Single Object Detection (Initial Attempt)
-- Built basic CNN for detecting one waste item per image
-- Limitations: Couldn't handle multiple objects in frame
-
-### Multi-Object Detection (Final Version)
-- Implemented full YOLO architecture with 14×14 grid
-- Supports multiple waste items per image with bounding boxes
+- Phase 1 - training on YOLOv11 pre-trained (sortnow_yolov11s_training.ipynb)
+- Phase 2 - Single Object Detection (single-obj-detection.ipynb)
+- Phase 3 - Custom Multi-Object Detection model (https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)

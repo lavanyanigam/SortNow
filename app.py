@@ -95,7 +95,7 @@ def iou(box1, box2):
 def draw_boxes(img, boxes):
     img_array = np.array(img)
     h, w = img_array.shape[:2]
-    colors = COLORS = [
+    colors = [
     (180, 0, 0),      # Dark red
     (0, 150, 0),      # Dark green
     (0, 0, 200),      # Blue 

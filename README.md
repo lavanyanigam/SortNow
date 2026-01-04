@@ -1,13 +1,9 @@
 # SortNow: AI-Powered Waste Classification System
 
-YOLO-based waste detection system classifying 6 categories: Biodegradable, Cardboard, Glass, Metal, Paper, and Plastic.
-
-## Overview
-
-Custom YOLOv1 architecture with 14×14 grid detection for real-time waste classification through web interface.
+A Custom YOLO based waste detection system for real-time waste classification through web interface. Classifying waste into 6 categories: Biodegradable, Cardboard, Glass, Metal, Paper, and Plastic. 
 
 ### Key Features
-- Custom YOLO with 14×14 grid, 2 boxes per cell, 6 classes
+- Custom YOLO with 14×14 grid detection, 2 boxes per cell, 6 classes
 - Flask web application with interactive UI
 - Trained on 7,260 images, validated on 3,114 images
 
@@ -33,8 +29,14 @@ Custom YOLOv1 architecture with 14×14 grid detection for real-time waste classi
 2. Filtered images with >98 objects using `preprocessing/max_obj_filter.py`
 4. Final: 7,260 images across 6 classes
 
+## Reproduce Training
 
-## Installation
+- **Fork notebook:** [Kaggle Notebook Link](https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)
+- **Use dataset:** [Custom Kaggle Dataset](https://www.kaggle.com/datasets/lavanyanigam/garbageclassificationfinal)
+- Train on Kaggle GPU
+- Download best_model.pth
+
+## Installation for Web Interface
 
 1. **Clone the Repository**
 ```bash
@@ -47,9 +49,10 @@ cd SortNow
 pip install -r requirements.txt
 ```
 
-## Download Trained Model
+3. **Download Trained Model:** 
 
-**Google Drive**: [Download best_model.pth](https://drive.google.com/drive/folders/1ivYL-NOWnobMNxCAc_xLHM5FVsEsOz0q?usp=sharing)
+* **Google Drive**: [Download best_model.pth](https://drive.google.com/drive/folders/1ivYL-NOWnobMNxCAc_xLHM5FVsEsOz0q?usp=sharing)
+
 * Place it in the project root so that your folder looks like
 
 ```text
@@ -71,7 +74,7 @@ python app.py
 ```
 http://localhost:5001
 ```
-3. **Classify Waste:**
+3. **Classify Waste**
 
 ## Training Details
 
@@ -91,15 +94,8 @@ http://localhost:5001
 - Final validation loss: 177.0820
 - ![Training History](yolo_training_plot.png)
 
-## Reproduce Training
-
-- **Fork notebook:** [Kaggle Notebook Link](https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)
-- **Use dataset:** [Custom Kaggle Dataset](https://www.kaggle.com/datasets/lavanyanigam/garbageclassificationfinal)
-- Train on Kaggle GPU
-- Download best_model.pth
-
 ## **Development History**
 
-- Phase 1 - training on YOLOv11 pre-trained (development_iterations/sortnow_yolov11s_training.ipynb)
-- Phase 2 - Single Object Detection (development_iterations/single-obj-detection.ipynb)
+- Phase 1 - training on YOLOv11 pre-trained `development_iterations/sortnow_yolov11s_training.ipynb`
+- Phase 2 - Single Object Detection `development_iterations/single-obj-detection.ipynb`
 - Phase 3 - Custom Multi-Object Detection model (https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)

@@ -95,7 +95,7 @@ def iou(box1, box2):
 def draw_boxes(img, boxes):
     img_array = np.array(img)
     h, w = img_array.shape[:2]
-    colors = COLORS = [
+    colors = [
     (180, 0, 0),      # Dark red
     (0, 150, 0),      # Dark green
     (0, 0, 200),      # Blue 
@@ -126,7 +126,7 @@ def draw_boxes(img, boxes):
         cv2.putText(img_array, label, (x1, y1-5), 
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
 
-        return Image.fromarray(img_array)
+    return Image.fromarray(img_array)
 
 
 # Load model
@@ -150,7 +150,7 @@ def predict():
             pred = model(img_tensor)
         
         boxes = cellboxes_to_boxes(pred)[0].numpy()
-        boxes_list = [boxes[i,j].tolist() for i in range(14) for j in range(14) if boxes[i,j,1] > 0.25]
+        boxes_list = [boxes[i,j].tolist() for i in range(14) for j in range(14) if boxes[i,j,1] > 0.2]
         boxes_nms = nms(boxes_list)
         
         detections = [{'class_name': CLASS_NAMES[int(b[0])], 'confidence': float(b[1]), 'bin': BINS[int(b[0])]} for b in boxes_nms]
@@ -169,5 +169,4 @@ def predict():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
-
 

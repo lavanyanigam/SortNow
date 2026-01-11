@@ -6,7 +6,7 @@
 
 **File Details**:
 - **Filename**: `best_model.pth`
-- **Size**: ~2.62 GB
+- **Size**: ~2.44 GB
 - **Format**: PyTorch checkpoint (.pth)
 - **Training Platform**: Kaggle P100 GPU
 - **Best Epoch**: 54/100

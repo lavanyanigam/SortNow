@@ -1,19 +1,15 @@
 # SortNow: AI-Powered Waste Classification System
 
-YOLO-based waste detection system classifying 6 categories: Biodegradable, Cardboard, Glass, Metal, Paper, and Plastic.
-
-## Overview
-
-Custom YOLOv1 architecture with 14×14 grid detection for real-time waste classification through web interface.
+A Custom YOLO based waste detection system for real-time waste classification through web interface. Classifying waste into 6 categories: Biodegradable, Cardboard, Glass, Metal, Paper, and Plastic. 
 
 ### Key Features
-- Custom YOLO with 14×14 grid, 2 boxes per cell, 6 classes
+- Custom YOLO with 14×14 grid detection, 2 boxes per cell, 6 classes
 - Flask web application with interactive UI
 - Trained on 7,260 images, validated on 3,114 images
 
 ## Model Architecture
 
-![Architecture](model_arch.png)
+![Architecture](model/model_arch.png)
 
 - **Type**: Custom YOLOv1
 - **Input Size**: 448×448 pixels
@@ -33,24 +29,31 @@ Custom YOLOv1 architecture with 14×14 grid detection for real-time waste classi
 2. Filtered images with >98 objects using `preprocessing/max_obj_filter.py`
 4. Final: 7,260 images across 6 classes
 
-````markdown
-## Installation
+## Reproduce Training
+
+- **Fork notebook:** [Kaggle Notebook Link](https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)
+- **Use dataset:** [Custom Kaggle Dataset](https://www.kaggle.com/datasets/lavanyanigam/garbageclassificationfinal)
+- Train on Kaggle GPU
+- Download best_model.pth
+
+## Installation for Web Interface
 
 1. **Clone the Repository**
 ```bash
 git clone https://github.com/lavanyanigam/SortNow.git
 cd SortNow
-````
+```
 
 2. **Install Dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-## Download Trained Model
+3. **Download Trained Model:** 
 
-**Google Drive**: [Download best_model.pth](https://drive.google.com/drive/folders/1ivYL-NOWnobMNxCAc_xLHM5FVsEsOz0q?usp=sharing)
-* Place it in the project root (same folder as `app.py`)
+* **Google Drive**: [Download best_model.pth](https://drive.google.com/drive/folders/1ivYL-NOWnobMNxCAc_xLHM5FVsEsOz0q?usp=sharing)
+
+* Place it in the project root so that your folder looks like
 
 ```text
 SortNow/
@@ -71,13 +74,11 @@ python app.py
 ```
 http://localhost:5001
 ```
-3. **Classify Waste:**
--Upload an image
--Click Classify & View detection results and bin recommendations
+3. **Classify Waste**
 
 ## Training Details
 
--**Notebook:** [Training Code](https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)
+- **Notebook:** [Training Code](https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)
 - **Framework:** PyTorch
 - **Optimizer:** Adam 
 - **Learning rate:** 1e-4 
@@ -91,18 +92,10 @@ http://localhost:5001
 - Best model at epoch 54 with validation loss: 176.3113
 - Final training loss: 65.5796
 - Final validation loss: 177.0820
-
 - ![Training History](yolo_training_plot.png)
 
-## Reproduce Training
+## **Development History**
 
-- **Fork notebook:** [KAGGLE NOTEBOOK LINK](https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)
-- **Use dataset:** [Custom Kaggle Dataset](https://www.kaggle.com/datasets/lavanyanigam/garbageclassificationfinal)
-- Train on Kaggle GPU
-- [Download best_model.pth](https://drive.google.com/drive/folders/1ivYL-NOWnobMNxCAc_xLHM5FVsEsOz0q?usp=sharing)
-
-##**Development History**
-
-- Phase 1 - training on YOLOv11 pre-trained (sortnow_yolov11s_training.ipynb)
-- Phase 2 - Single Object Detection (single-obj-detection.ipynb)
+- Phase 1 - training on YOLOv11 pre-trained `development_iterations/sortnow_yolov11s_training.ipynb`
+- Phase 2 - Single Object Detection `development_iterations/single-obj-detection.ipynb`
 - Phase 3 - Custom Multi-Object Detection model (https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)

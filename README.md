@@ -18,7 +18,6 @@ A Custom YOLO based waste detection system for real-time waste classification th
 - **Classes**: 6 waste categories
 - **Output**: Class predictions + bounding box coordinates
 
-
 ## Dataset
 
 **Original:** [Roboflow Garbage Classification](https://universe.roboflow.com/material-identification/garbage-classification-3)  
@@ -29,12 +28,14 @@ A Custom YOLO based waste detection system for real-time waste classification th
 2. Filtered images with >98 objects using `preprocessing/max_obj_filter.py`
 4. Final: 7,260 images across 6 classes
 
+
 ## Reproduce Training
 
 - **Fork notebook:** [Kaggle Notebook Link](https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)
 - **Use dataset:** [Custom Kaggle Dataset](https://www.kaggle.com/datasets/lavanyanigam/garbageclassificationfinal)
 - Train on Kaggle GPU
-- Download best_model.pth
+- Download `best_model.pth`
+- **Live Demo on Hugging Face Spaces:** https://huggingface.co/spaces/lavanyanigam/SortNow
 
 ## Installation for Web Interface
 
@@ -92,6 +93,7 @@ http://localhost:5001
 - Best model at epoch 54 with validation loss: 176.3113
 - Final training loss: 65.5796
 - Final validation loss: 177.0820
+- These results indicate **overfitting**, likely due to dataset imbalance and limited model capacity. 
 - ![Training History](yolo_training_plot.png)
 
 ## **Development History**

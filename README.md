@@ -9,7 +9,7 @@ A Custom YOLO based waste detection system for real-time waste classification th
 
 ## Model Architecture
 
-![Architecture](model/model_arch.png)
+![Architecture](model/sortnow_arch.png)
 
 - **Type**: Custom YOLOv1
 - **Input Size**: 448×448 pixels

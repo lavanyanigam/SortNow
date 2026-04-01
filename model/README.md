@@ -23,7 +23,7 @@
 - **Bounding Boxes per Cell**: 2 (B=2)
 - **Classes**: 6 waste categories
 - **Output**: Class predictions + bounding box coordinates
-- ![Architecture](model_arch.png)
+- ![Architecture](sortnow_arch.png)
 
 
 ### Classes

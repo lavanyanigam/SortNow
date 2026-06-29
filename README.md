@@ -93,7 +93,18 @@ http://localhost:5001
 - Best model at epoch 54 with validation loss: 176.3113
 - Final training loss: 65.5796
 - Final validation loss: 177.0820
-- These results indicate **overfitting**, likely due to dataset imbalance and limited model capacity. 
+- mAP@0.5: 7.78%
+- Per class:
+
+1. CARDBOARD: 16.91%
+2. GLASS: 12.86%
+3. PAPER: 11.53%
+4. METAL: 2.63%
+5. PLASTIC: 2.58%
+6. BIODEGRADABLE: 0.18%
+   
+- These results indicate **overfitting**, likely due to dataset imbalance and limited model capacity.
+ 
 - ![Training History](yolo_training_plot.png)
 
 ## **Development History**

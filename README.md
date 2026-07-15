@@ -109,6 +109,11 @@ http://localhost:5001
 
 ## **Development History**
 
-- Phase 1 - training on YOLOv11 pre-trained `development_iterations/sortnow_yolov11s_training.ipynb`
+- Phase 1 - training on YOLOv11s pre-trained `development_iterations/sortnow_yolov11s_training.ipynb`
+achieved mAP50: 0.8434
+mAP50-95: 0.7105
+
 - Phase 2 - Single Object Detection `development_iterations/single-obj-detection.ipynb`
+
+
 - Phase 3 - Custom Multi-Object Detection model (https://www.kaggle.com/code/lavanyanigam/yolo-from-scratch)
